@@ -1,0 +1,32 @@
+name: resumen
+on:
+  schedule:
+    # 7:00 am en Monterrey (UTC-6, sin horario de verano)
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  resumen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet icalendar==6.1.0 recurring-ical-events==3.3.3
+      - run: python resumen.py
+        env:
+          GOOGLE_ICAL_URL: ${{ secrets.GOOGLE_ICAL_URL }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_WEBHOOK_PENDIENTES: ${{ secrets.DISCORD_WEBHOOK_PENDIENTES }}
+      # GitHub apaga los workflows programados de un repo publico tras 60 dias sin commits: un latido cada lunes
+      - name: Latido semanal
+        if: github.event_name == 'schedule'
+        run: |
+          [ "$(date -u +%u)" = "1" ] || exit 0
+          date -u +%F > latido.txt
+          git config user.name "jariax-monitor"
+          git config user.email "jariax-monitor@users.noreply.github.com"
+          git add latido.txt && git commit -m "latido" && git push
