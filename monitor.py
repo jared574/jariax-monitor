@@ -8,10 +8,10 @@ import urllib.request
 from datetime import datetime, timezone
 
 SITIOS = {
-    "jariax.com": "https://jariax.com",
-    "Vangil clinicas": "https://clinicas.jariax.com/login",
-    "Vangil barberias": "https://barberias.jariax.com/login",
-    "Vangil admin": "https://admin.jariax.com/login",
+    "Vangil pagina": "https://vangil.com.mx",
+    "Vangil clinicas": "https://clinicas.vangil.com.mx/login",
+    "Vangil barberias": "https://barberias.vangil.com.mx/login",
+    "Vangil admin": "https://admin.vangil.com.mx/login",
     "n8n": "https://n8n.jariax.com/healthz",
 }
 ESTADO = pathlib.Path(__file__).with_name("estado.json")
